@@ -4,6 +4,8 @@ import (
 	"log"
 	"net"
 
+	"chat/chat"
+
 	"google.golang.org/grpc"
 )
 
@@ -16,7 +18,11 @@ func main() {
 		log.Fatalf("Cannot create listener on port %s: %s", PORT, err)
 	}
 
+	serverRegistrar := chat.Server{}
+
 	grpcServer := grpc.NewServer()
+
+	chat.RegisterChatServiceServer(grpcServer, &serverRegistrar)
 
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalf("Failed to launch server on port %s: %s", PORT, err)
